@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JP Facilities — Centre de Formation</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0d0d;--surface:#161616;--surface2:#1f1f1f;
+  --border:#2a2a2a;--border2:#333;
+  --accent:#F26522;--accent-light:#ff8c4a;
+  --text:#f0f0f0;--text-muted:#888;--text-dim:#444;
+  --success:#22c55e;--danger:#e74c3c;
+  --card-radius:14px;--transition:0.22s cubic-bezier(.4,0,.2,1);
+  --header-bg:rgba(13,13,13,0.96);--shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+:root.light {
+  --bg:#f0ede8;--surface:#fff;--surface2:#e8e4df;
+  --border:#ddd9d3;--border2:#ccc8c2;
+  --text:#1a1a1a;--text-muted:#666;--text-dim:#bbb;
+  --success:#16a34a;--danger:#dc2626;
+  --header-bg:rgba(240,237,232,0.97);--shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70vw 50vh at 10% 0%,rgba(242,101,34,.06) 0%,transparent 55%),radial-gradient(ellipse 50vw 40vh at 90% 90%,rgba(242,101,34,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;background:var(--header-bg);backdrop-filter:blur(20px);border-bottom:2px solid var(--accent);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.logo-mark{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:var(--accent);border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;color:#fff}
+.logo-text{display:flex;flex-direction:column;line-height:1}
+.logo-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:.04em;text-transform:uppercase}
+.logo-sub{font-size:.62rem;font-weight:700;color:var(--accent);letter-spacing:.16em;text-transform:uppercase;margin-top:3px}
+.header-right{display:flex;align-items:center;gap:8px}
+.user-badge{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:.75rem;color:var(--text-muted);font-family:'Montserrat',sans-serif;font-weight:600}
+.user-dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-family:'Montserrat',sans-serif;font-size:.73rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:var(--transition);border:none;text-transform:uppercase;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(242,101,34,.3)}
+.btn-primary:hover{background:var(--accent-light);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.icon-btn-sm{width:34px;height:34px;border-radius:7px;background:transparent;border:1px solid var(--border2);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:var(--transition)}
+.icon-btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+
+/* STATUS BAR */
+.status-bar{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:12px 40px;display:flex;align-items:center;gap:10px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--text-dim)}
+.status-dot.connected{background:var(--success)}
+.status-dot.loading{background:#f59e0b;animation:pulse 1s infinite}
+.status-dot.error{background:var(--danger)}
+.status-text{font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;color:var(--text-muted)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* PROGRESS BANNER */
+.progress-banner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 16px}
+.progress-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:20px}
+.progress-info{flex:1}
+.progress-title{font-family:'Montserrat',sans-serif;font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.progress-bar-wrap{background:var(--surface2);border-radius:6px;height:7px;overflow:hidden;margin-bottom:5px}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-light));border-radius:6px;transition:width .6s ease}
+.progress-meta{font-size:.71rem;color:var(--text-muted)}
+.progress-pct{font-family:'Montserrat',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent);min-width:52px;text-align:right}
+.progress-reset{font-size:.7rem;color:var(--text-dim);cursor:pointer;text-decoration:underline;margin-left:10px}
+.progress-reset:hover{color:var(--danger)}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:36px 40px 20px;max-width:1200px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.hero-eyebrow::before{content:'';display:block;width:22px;height:2px;background:var(--accent);border-radius:2px}
+.hero h1{font-family:'Montserrat',sans-serif;font-size:clamp(1.6rem,3vw,2.7rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;color:var(--text)}
+.hero h1 .accent{color:var(--accent)}
+.hero-desc{font-size:.87rem;color:var(--text-muted);max-width:480px;line-height:1.8;margin-top:10px}
+
+/* STATS */
+.stats-bar{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 14px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.stat-item{display:flex;align-items:baseline;gap:6px}
+.stat-num{font-family:'Montserrat',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent)}
+.stat-label{font-family:'Montserrat',sans-serif;font-size:.67rem;font-weight:600;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase}
+.stat-sep{width:1px;height:20px;background:var(--border2)}
+
+/* TOOLBAR */
+.toolbar{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 16px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.filter-btn{padding:7px 13px;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text-muted);transition:var(--transition)}
+.filter-btn.active,.filter-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.cat-pills{display:flex;gap:5px;flex-wrap:wrap}
+.cat-pill{padding:5px 11px;border-radius:20px;font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text-muted);transition:var(--transition)}
+.cat-pill.active{background:rgba(242,101,34,.15);border-color:var(--accent);color:var(--accent)}
+.cat-pill:hover{border-color:var(--accent);color:var(--accent)}
+.toolbar-sep{width:1px;height:22px;background:var(--border2);flex-shrink:0}
+.search-wrap{margin-left:auto;position:relative}
+.search-wrap input{background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:8px 13px 8px 35px;border-radius:7px;font-family:'Open Sans',sans-serif;font-size:.83rem;width:220px;outline:none;transition:var(--transition)}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(242,101,34,.1)}
+.search-wrap input::placeholder{color:var(--text-dim)}
+.search-wrap::before{content:'⌕';position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text-muted);pointer-events:none}
+.sort-sel{background:var(--surface);border:1px solid var(--border2);color:var(--text-muted);padding:7px 10px;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;outline:none}
+
+/* GRID */
+.grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:4px 40px 60px;max-width:1200px;margin:0 auto}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);overflow:hidden;transition:border-color var(--transition),transform var(--transition),box-shadow var(--transition);animation:fadeUp .3s ease both;box-shadow:var(--shadow);position:relative}
+.card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 16px 40px rgba(242,101,34,.18)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card-thumb{position:relative;aspect-ratio:16/9;background:var(--surface2);overflow:hidden;cursor:pointer}
+.card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.card:hover .card-thumb img{transform:scale(1.04)}
+.thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:var(--transition)}
+.card:hover .thumb-overlay{opacity:1}
+.play-circle{width:52px;height:52px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;transform:scale(.85);transition:var(--transition);box-shadow:0 0 28px rgba(242,101,34,.5)}
+.card:hover .play-circle{transform:scale(1)}
+.play-circle svg{width:20px;height:20px;fill:#fff;margin-left:3px}
+.thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,var(--surface2),var(--bg))}
+.type-badge{position:absolute;top:9px;left:9px;padding:3px 8px;border-radius:4px;font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.badge-youtube{background:#cc0000;color:#fff}
+.badge-mp4{background:var(--accent);color:#fff}
+.duration-tag{position:absolute;bottom:7px;right:7px;background:rgba(0,0,0,.75);color:#fff;font-size:.7rem;font-weight:600;padding:2px 6px;border-radius:4px;font-family:'Montserrat',sans-serif}
+.viewed-badge{position:absolute;top:9px;right:9px;background:rgba(34,197,94,.9);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.card-progress-bar{height:3px;background:var(--border)}
+.card-progress-fill{height:100%;background:var(--success);transition:width .4s ease}
+.card-body{padding:14px 16px 16px}
+.card-category{font-family:'Montserrat',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.card-title{font-family:'Montserrat',sans-serif;font-size:.89rem;font-weight:700;line-height:1.4;margin-bottom:7px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-desc{font-size:.78rem;color:var(--text-muted);line-height:1.65;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)}
+.card-date{font-family:'Montserrat',sans-serif;font-size:.67rem;font-weight:500;color:var(--text-dim)}
+.card-actions{display:flex;gap:4px}
+.icon-btn{width:28px;height:28px;border-radius:6px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:var(--transition);color:var(--text-muted)}
+.icon-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.icon-btn.del:hover{background:var(--danger);border-color:var(--danger)}
+.icon-btn.mark:hover{background:var(--success);border-color:var(--success)}
+
+/* EMPTY */
+.empty-state{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--text-dim)}
+.e-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:.95rem;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:16px}
+
+/* MODAL BASE */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.28s ease}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--accent);border-radius:16px;width:100%;max-width:880px;transform:scale(.95) translateY(14px);transition:.28s cubic-bezier(.4,0,.2,1);overflow:hidden;max-height:92vh;display:flex;flex-direction:column}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.modal-header h3{font-family:'Montserrat',sans-serif;font-size:.93rem;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-header-actions{display:flex;gap:5px;align-items:center}
+.modal-close{width:30px;height:30px;border-radius:6px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:var(--transition)}
+.modal-close:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+.modal-video{aspect-ratio:16/9;background:#000;flex-shrink:0}
+.modal-video iframe,.modal-video video{width:100%;height:100%;border:none;display:block}
+.modal-body{padding:16px 20px 20px;overflow-y:auto}
+.modal-meta{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.modal-cat{font-family:'Montserrat',sans-serif;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.modal-date{font-size:.72rem;color:var(--text-dim)}
+.modal-desc{font-size:.85rem;color:var(--text-muted);line-height:1.75}
+.modal-mark-row{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* ADD MODAL */
+.add-modal .modal{max-width:580px}
+.type-tabs{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.type-tab{flex:1;padding:10px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:transparent;color:var(--text-muted);border:none;transition:var(--transition)}
+.type-tab.selected{background:var(--accent);color:#fff}
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-family:'Montserrat',sans-serif;font-size:.69rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:7px;color:var(--text);padding:9px 12px;font-family:'Open Sans',sans-serif;font-size:.84rem;outline:none;transition:var(--transition);resize:vertical}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(242,101,34,.1)}
+.form-group select option{background:var(--bg)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.or-divider{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-dim);font-size:.71rem;font-weight:600;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border2)}
+.submit-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;transition:var(--transition);box-shadow:0 4px 18px rgba(242,101,34,.3)}
+.submit-btn:hover{background:var(--accent-light);transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* CONFIRM */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s ease}
+.confirm-overlay.open{opacity:1;pointer-events:all}
+.confirm-box{background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--danger);border-radius:14px;padding:26px;max-width:360px;width:90%;transform:scale(.92);transition:.22s cubic-bezier(.4,0,.2,1);text-align:center}
+.confirm-overlay.open .confirm-box{transform:scale(1)}
+.confirm-icon{font-size:36px;margin-bottom:10px}
+.confirm-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.95rem;margin-bottom:7px;color:var(--text)}
+.confirm-msg{font-size:.82rem;color:var(--text-muted);margin-bottom:20px;line-height:1.6}
+.confirm-actions{display:flex;gap:9px;justify-content:center}
+
+/* NOTIFY */
+.notify{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--accent);border-left:4px solid var(--accent);color:var(--text);padding:12px 16px;border-radius:9px;font-size:.83rem;font-family:'Open Sans',sans-serif;font-weight:500;z-index:9999;transform:translateY(70px);opacity:0;transition:.35s cubic-bezier(.4,0,.2,1);max-width:290px;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+.notify.show{transform:translateY(0);opacity:1}
+.notify.ok{border-color:var(--success);border-left-color:var(--success)}
+.notify.err{border-color:var(--danger);border-left-color:var(--danger)}
+
+.back-top{position:fixed;bottom:22px;left:22px;width:38px;height:38px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-muted);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;z-index:99;transition:var(--transition);opacity:0;pointer-events:none}
+.back-top.visible{opacity:1;pointer-events:all}
+.back-top:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+@media(max-width:768px){
+  header{padding:0 14px}
+  .hero,.progress-banner,.stats-bar,.toolbar,.grid{padding-left:14px;padding-right:14px}
+  .grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .hero h1{font-size:1.6rem}
+  .cat-pills,.toolbar-sep{display:none}
+  .search-wrap{margin-left:0;width:100%}
+  .search-wrap input{width:100%}
+  .user-badge span:last-child{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">JPF</div>
+    <div class="logo-text">
+      <span class="logo-name">JP Facilities</span>
+      <span class="logo-sub">Centre de Formation</span>
+    </div>
+  </a>
+  <div class="header-right">
+    <div class="user-badge" id="userBadge" style="display:none">
+      <div class="user-dot" id="userDot"></div>
+      <span id="userName">Chargement...</span>
+    </div>
+    <button class="icon-btn-sm" id="themeToggle" onclick="toggleTheme()" title="Thème"></button>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Ajouter une vidéo</button>
+  </div>
+</header>
+
+<!-- STATUS -->
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span class="status-text" id="statusText">Connexion à SharePoint...</span>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-banner">
+  <div class="progress-card">
+    <div class="progress-info">
+      <div class="progress-title" id="progressTitle">Votre progression</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-meta" id="progressMeta">Chargement...</div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+    <span class="progress-reset" onclick="resetProgress()">Réinitialiser</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Bibliothèque de formation</div>
+  <h1>Centre de <span class="accent">Formation Interne</span></h1>
+  <p class="hero-desc">Accédez à toutes vos formations, tutoriels et enregistrements d'écran. Les vidéos sont partagées avec tous les collaborateurs en temps réel.</p>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-num" id="statTotal">—</span><span class="stat-label">Vidéos</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="statYT">—</span><span class="stat-label">YouTube</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="statMP4">—</span><span class="stat-label">Screen Rec</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="statViewed">—</span><span class="stat-label">Vues</span></div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <button class="filter-btn active" onclick="applyFilter('all',this)">Tous</button>
+  <button class="filter-btn" onclick="applyFilter('youtube',this)">YouTube</button>
+  <button class="filter-btn" onclick="applyFilter('mp4',this)">Screen Rec</button>
+  <button class="filter-btn" onclick="applyFilter('unseen',this)">Non vues</button>
+  <div class="toolbar-sep"></div>
+  <div class="cat-pills" id="catPills"></div>
+  <select class="sort-sel" id="sortSel" onchange="applyFilter(currentFilter,null)">
+    <option value="recent">Plus récent</option>
+    <option value="alpha">A → Z</option>
+    <option value="unseen">Non vues d'abord</option>
+  </select>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Rechercher..." oninput="applyFilter(currentFilter,null)">
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="grid" id="videoGrid"></div>
+
+<!-- PLAYER MODAL -->
+<div class="modal-overlay" id="playerModal" onclick="closePlayer(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="playerTitle">—</h3>
+      <div class="modal-header-actions">
+        <button class="icon-btn-sm" id="playerExtBtn" onclick="openCurrentExt()" title="Ouvrir dans un onglet">↗</button>
+        <button class="icon-btn-sm" onclick="deleteCurrentVideo()" title="Supprimer" style="border-color:var(--danger);color:var(--danger)">🗑</button>
+        <button class="modal-close" onclick="closePlayer()">✕</button>
+      </div>
+    </div>
+    <div class="modal-video" id="playerContent"></div>
+    <div class="modal-body">
+      <div class="modal-meta">
+        <span class="modal-cat" id="playerCat"></span>
+        <span class="modal-date" id="playerDate"></span>
+      </div>
+      <p class="modal-desc" id="playerDesc"></p>
+      <div class="modal-mark-row">
+        <button class="btn btn-ghost" id="markBtn" onclick="toggleViewed()" style="font-size:.75rem"></button>
+        <span id="markHint" style="font-size:.79rem;color:var(--text-muted)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay add-modal" id="addModal" onclick="closeAdd(event)">
+  <div class="modal" style="max-width:580px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Ajouter une vidéo de formation</h3>
+      <button class="modal-close" onclick="closeAdd()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Type de contenu</label>
+        <div class="type-tabs">
+          <button class="type-tab selected" id="tab-yt" onclick="selType('youtube')">▶ YouTube</button>
+          <button class="type-tab" id="tab-mp4" onclick="selType('mp4')">🎬 Screen Recording</button>
+        </div>
+      </div>
+      <div id="yt-section">
+        <div class="form-group">
+          <label>URL YouTube</label>
+          <input type="text" id="ytUrl" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+      </div>
+      <div id="mp4-section" style="display:none">
+        <div class="form-group">
+          <label>URL SharePoint de la vidéo MP4</label>
+          <input type="text" id="mp4Url" placeholder="https://jpfacilities365.sharepoint.com/.../video.mp4">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Titre de la formation *</label>
+        <input type="text" id="addTitle" placeholder="Ex : Prise en main de Kizeo Forms">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="addCat">
+            <option value="Logiciel">Logiciel</option>
+            <option value="Processus">Processus</option>
+            <option value="RH">RH</option>
+            <option value="Finance">Finance</option>
+            <option value="Technique">Technique</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Sécurité">Sécurité</option>
+            <option value="Général">Général</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Durée (ex: 14:30)</label>
+          <input type="text" id="addDur" placeholder="optionnel">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="addDesc" rows="3" placeholder="Brève description du contenu..."></textarea>
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="addVideo()">Ajouter à la bibliothèque</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑</div>
+    <div class="confirm-title">Supprimer cette vidéo ?</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Annuler</button>
+      <button class="btn btn-danger" onclick="doDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<div class="notify" id="notify"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// CONFIGURATION SHAREPOINT
+// ══════════════════════════════════════════════════════════════════════════════
+const SP_SITE  = '/sites/JPFACILITIES';
+const SP_API   = `${window.location.origin}${SP_SITE}/_api`;
+const LIST_NAME = 'Formation vidéo';   // nom exact de votre liste
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════════
+let videos = [];
+let currentFilter = 'all';
+let currentCat = 'all';
+let currentPlayId = null;
+let pendingDeleteId = null;
+let addType = 'youtube';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SHAREPOINT REST API
+// ══════════════════════════════════════════════════════════════════════════════
+async function spFetch(url, opts = {}) {
+  const res = await fetch(url, {
+    credentials: 'include',
+    headers: { 'Accept': 'application/json;odata=nometadata', 'Content-Type': 'application/json;odata=nometadata', ...opts.headers },
+    ...opts
+  });
+  if (!res.ok) throw new Error(`SP ${res.status}: ${await res.text()}`);
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+async function getDigest() {
+  const d = await spFetch(`${SP_API}/contextinfo`, { method: 'POST' });
+  return d.FormDigestValue;
+}
+
+// ── Charger toutes les vidéos depuis la liste ──────────────────────────────
+async function loadVideos() {
+  setStatus('loading', 'Chargement des formations...');
+  try {
+    const enc = encodeURIComponent(LIST_NAME);
+    const data = await spFetch(
+      `${SP_API}/web/lists/getbytitle('${enc}')/items` +
+      `?$select=Id,Title,URL,Video_x0020_type,Categorie,Description,Dur%C3%A9e,Created` +
+      `&$orderby=Created desc&$top=500`
+    );
+    videos = (data.value || []).map(item => ({
+      id: item.Id,
+      title: item.Title || '',
+      url: item.URL?.Url || item.URL || '',
+      type: (item['Video_x0020_type'] || 'youtube').toLowerCase(),
+      category: item.Categorie || 'Général',
+      desc: item.Description || '',
+      duration: item['Durée'] || item.Dur_x00e9_e || '',
+      date: item.Created ? new Date(item.Created).toLocaleDateString('fr-FR') : ''
+    }));
+    setStatus('connected', `Connecté à SharePoint — ${videos.length} formation${videos.length > 1 ? 's' : ''} disponible${videos.length > 1 ? 's' : ''}`);
+    buildCatPills();
+    applyFilter(currentFilter, null);
+  } catch(e) {
+    console.error(e);
+    setStatus('error', 'Erreur de connexion à SharePoint. Vérifiez que la page est hébergée sur SharePoint.');
+    showEmpty('Impossible de charger les formations.<br>Ce fichier doit être ouvert depuis SharePoint, pas en local.');
+  }
+}
+
+// ── Charger l'utilisateur connecté ────────────────────────────────────────
+async function loadUser() {
+  try {
+    const me = await spFetch(`${SP_API}/web/currentuser`);
+    document.getElementById('userBadge').style.display = 'flex';
+    document.getElementById('userName').textContent = me.Title;
+    document.getElementById('userDot').style.background = 'var(--success)';
+  } catch {}
+}
+
+// ── Ajouter une vidéo dans la liste ──────────────────────────────────────
+async function spAddVideo(title, url, type, cat, desc, dur) {
+  const enc = encodeURIComponent(LIST_NAME);
+  const digest = await getDigest();
+
+  // Construire le body selon le type de colonne URL
+  const body = {
+    Title: title,
+    Video_x0020_type: type,
+    Categorie: cat,
+    Description: desc,
+  };
+
+  // La colonne URL est de type Lien hypertexte
+  if (url) body.URL = { __metadata: { type: 'SP.FieldUrlValue' }, Url: url, Description: title };
+  if (dur) body['Durée'] = dur;
+
+  await spFetch(
+    `${SP_API}/web/lists/getbytitle('${enc}')/items`,
+    { method: 'POST', headers: { 'X-RequestDigest': digest }, body: JSON.stringify(body) }
+  );
+}
+
+// ── Supprimer une vidéo de la liste ─────────────────────────────────────
+async function spDeleteVideo(id) {
+  const enc = encodeURIComponent(LIST_NAME);
+  const digest = await getDigest();
+  await spFetch(
+    `${SP_API}/web/lists/getbytitle('${enc}')/items(${id})`,
+    { method: 'DELETE', headers: { 'X-RequestDigest': digest, 'IF-MATCH': '*' } }
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PROGRESSION (localStorage par utilisateur)
+// ══════════════════════════════════════════════════════════════════════════════
+const VIEWED_KEY = 'jpf_formation_viewed_v3';
+function getViewed() { try { return JSON.parse(localStorage.getItem(VIEWED_KEY)) || []; } catch { return []; } }
+function saveViewed(a) { try { localStorage.setItem(VIEWED_KEY, JSON.stringify(a)); } catch {} }
+function isViewed(id) { return getViewed().includes(id); }
+function markViewed(id) { const a = getViewed(); if (!a.includes(id)) { a.push(id); saveViewed(a); } }
+function unmarkViewed(id) { saveViewed(getViewed().filter(x => x !== id)); }
+function resetProgress() {
+  if (!confirm('Réinitialiser toute votre progression ?')) return;
+  saveViewed([]); applyFilter(currentFilter, null);
+  showNotify('Progression réinitialisée.', 'err');
+}
+function updateProgress() {
+  const viewed = getViewed().filter(id => videos.find(v => v.id === id));
+  const total = videos.length, n = viewed.length;
+  const pct = total ? Math.round((n / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressTitle').textContent = `Votre progression — ${n} vidéo${n > 1 ? 's' : ''} vue${n > 1 ? 's' : ''} sur ${total}`;
+  document.getElementById('progressMeta').textContent = pct === 100 ? '🎉 Toutes les formations sont complétées !'
+    : pct === 0 ? 'Commencez à regarder des vidéos pour suivre votre avancement'
+    : `Plus que ${total - n} formation${total - n > 1 ? 's' : ''} à compléter`;
+  document.getElementById('statViewed').textContent = n;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// YOUTUBE
+// ══════════════════════════════════════════════════════════════════════════════
+function getYTId(url) { const m = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?\s]+)/); return m ? m[1] : null; }
+function getYTThumb(url) { const id = getYTId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null; }
+function getYTEmbed(url) { const id = getYTId(url); return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : null; }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+function setStatus(state, text) {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot ' + state;
+  document.getElementById('statusText').textContent = text;
+}
+function showEmpty(msg) {
+  document.getElementById('videoGrid').innerHTML = `<div class="empty-state"><div class="e-icon">⚠️</div><p>${msg}</p></div>`;
+}
+
+function buildCatPills() {
+  const cats = [...new Set(videos.map(v => v.category))].sort();
+  const c = document.getElementById('catPills');
+  c.innerHTML = '';
+  cats.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'cat-pill' + (currentCat === cat ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => { currentCat = currentCat === cat ? 'all' : cat; buildCatPills(); applyFilter(currentFilter, null); };
+    c.appendChild(b);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════════════════════
+function renderVideos(list) {
+  const grid = document.getElementById('videoGrid');
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="e-icon">🎬</div><p>Aucune vidéo trouvée.</p><button class="btn btn-primary" onclick="openAddModal()">+ Ajouter une vidéo</button></div>`;
+    updateStats(); updateProgress(); return;
+  }
+  const sort = document.getElementById('sortSel').value;
+  const viewed = getViewed();
+  let sorted = [...list];
+  if (sort === 'alpha') sorted.sort((a,b) => a.title.localeCompare(b.title));
+  else if (sort === 'unseen') sorted.sort((a,b) => {
+    const av = viewed.includes(a.id), bv = viewed.includes(b.id);
+    return av === bv ? 0 : av ? 1 : -1;
+  });
+
+  sorted.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'card'; card.style.animationDelay = `${i * 0.04}s`;
+    const thumb = v.type === 'youtube' ? getYTThumb(v.url) : null;
+    const seen = viewed.includes(v.id);
+    card.innerHTML = `
+      <div class="card-thumb" onclick="playVideo(${v.id})">
+        ${thumb ? `<img src="${thumb}" alt="${v.title}" loading="lazy">` : `<div class="thumb-placeholder">🎥</div>`}
+        <div class="thumb-overlay"><div class="play-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <span class="type-badge ${v.type === 'youtube' ? 'badge-youtube' : 'badge-mp4'}">${v.type === 'youtube' ? 'YouTube' : 'Screen Rec'}</span>
+        ${v.duration ? `<span class="duration-tag">${v.duration}</span>` : ''}
+        ${seen ? `<span class="viewed-badge" title="Déjà vue">✓</span>` : ''}
+      </div>
+      <div class="card-progress-bar"><div class="card-progress-fill" style="width:${seen ? 100 : 0}%"></div></div>
+      <div class="card-body">
+        <div class="card-category">${v.category}</div>
+        <h3 class="card-title">${v.title}</h3>
+        <p class="card-desc">${v.desc || 'Aucune description disponible.'}</p>
+        <div class="card-footer">
+          <span class="card-date">${v.date}</span>
+          <div class="card-actions">
+            <div class="icon-btn" title="Regarder" onclick="playVideo(${v.id})">▶</div>
+            ${v.url ? `<div class="icon-btn" title="Ouvrir dans un onglet" onclick="openExt(${v.id})">↗</div>` : ''}
+            <div class="icon-btn mark" title="${seen ? 'Marquer non vue' : 'Marquer vue'}" onclick="toggleCard(${v.id})">${seen ? '↩' : '✓'}</div>
+            <div class="icon-btn del" title="Supprimer" onclick="confirmDelete(${v.id})">🗑</div>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  updateStats(); updateProgress();
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = videos.length;
+  document.getElementById('statYT').textContent = videos.filter(v => v.type === 'youtube').length;
+  document.getElementById('statMP4').textContent = videos.filter(v => v.type === 'mp4').length;
+}
+
+function toggleCard(id) {
+  if (isViewed(id)) unmarkViewed(id); else markViewed(id);
+  applyFilter(currentFilter, null);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FILTER
+// ══════════════════════════════════════════════════════════════════════════════
+function applyFilter(type, btn) {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); currentFilter = type;
+  }
+  let list = [...videos];
+  if (currentFilter === 'youtube') list = list.filter(v => v.type === 'youtube');
+  else if (currentFilter === 'mp4') list = list.filter(v => v.type === 'mp4');
+  else if (currentFilter === 'unseen') list = list.filter(v => !isViewed(v.id));
+  if (currentCat !== 'all') list = list.filter(v => v.category === currentCat);
+  if (search) list = list.filter(v =>
+    v.title.toLowerCase().includes(search) ||
+    v.category.toLowerCase().includes(search) ||
+    (v.desc && v.desc.toLowerCase().includes(search))
+  );
+  renderVideos(list);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PLAYER
+// ══════════════════════════════════════════════════════════════════════════════
+function showFallback(el, url, title) {
+  Object.assign(el.style, { display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'16px', background:'#0d0d0d', padding:'36px 22px' });
+  el.innerHTML = `<div style="font-size:48px">▶️</div>
+    <div style="text-align:center">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:.93rem;color:#f0f0f0;margin-bottom:6px">${title}</div>
+      <div style="font-size:.8rem;color:#888;margin-bottom:16px">Lecture intégrée non disponible.</div>
+      <a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:#F26522;color:#fff;border-radius:8px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase">▶ Ouvrir sur YouTube</a>
+    </div>`;
+}
+
+function playVideo(id) {
+  const v = videos.find(x => x.id === id); if (!v) return;
+  currentPlayId = id;
+  document.getElementById('playerTitle').textContent = v.title;
+  document.getElementById('playerCat').textContent = v.category;
+  document.getElementById('playerDate').textContent = v.date;
+  document.getElementById('playerDesc').textContent = v.desc || '';
+  document.getElementById('playerExtBtn').style.display = v.url ? 'flex' : 'none';
+  updateMarkBtn(id);
+  const el = document.getElementById('playerContent'); el.style = '';
+  if (v.type === 'youtube') {
+    if (location.protocol === 'file:') { showFallback(el, v.url, v.title); }
+    else {
+      const f = document.createElement('iframe');
+      f.src = getYTEmbed(v.url); f.setAttribute('allowfullscreen',''); f.setAttribute('allow','autoplay; encrypted-media');
+      f.style.cssText = 'width:100%;height:100%;border:none;display:block';
+      const onMsg = e => { if (typeof e.data === 'string') { try { const d = JSON.parse(e.data); if (d.event === 'infoDelivery' && d.info && d.info.error) { window.removeEventListener('message', onMsg); showFallback(el, v.url, v.title); } } catch {} } };
+      window.addEventListener('message', onMsg);
+      el.innerHTML = ''; el.appendChild(f);
+    }
+  } else {
+    el.innerHTML = `<video controls autoplay style="width:100%;height:100%;background:#000"><source src="${v.url}" type="video/mp4">Non supporté.</video>`;
+  }
+  setTimeout(() => { markViewed(id); updateMarkBtn(id); updateProgress(); applyFilter(currentFilter, null); }, 3000);
+  document.getElementById('playerModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateMarkBtn(id) {
+  const seen = isViewed(id);
+  document.getElementById('markBtn').textContent = seen ? '↩ Marquer comme non vue' : '✓ Marquer comme vue';
+  document.getElementById('markHint').textContent = seen ? 'Formation marquée comme complétée.' : 'Cochez après avoir regardé cette formation.';
+}
+function toggleViewed() {
+  if (!currentPlayId) return;
+  if (isViewed(currentPlayId)) unmarkViewed(currentPlayId); else markViewed(currentPlayId);
+  updateMarkBtn(currentPlayId); updateProgress(); applyFilter(currentFilter, null);
+}
+function closePlayer(e) {
+  if (e && e.target !== document.getElementById('playerModal')) return;
+  document.getElementById('playerModal').classList.remove('open');
+  document.getElementById('playerContent').innerHTML = '';
+  document.body.style.overflow = ''; currentPlayId = null;
+}
+function openCurrentExt() { if (currentPlayId) openExt(currentPlayId); }
+function deleteCurrentVideo() { if (currentPlayId) { closePlayer({}); confirmDelete(currentPlayId); } }
+function openExt(id) { const v = videos.find(x => x.id === id); if (v && v.url) window.open(v.url, '_blank'); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DELETE
+// ══════════════════════════════════════════════════════════════════════════════
+function confirmDelete(id) {
+  const v = videos.find(x => x.id === id); if (!v) return;
+  pendingDeleteId = id;
+  document.getElementById('confirmMsg').textContent = `"${v.title}" sera définitivement supprimée de la liste SharePoint.`;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+function closeConfirm() { pendingDeleteId = null; document.getElementById('confirmOverlay').classList.remove('open'); }
+async function doDelete() {
+  if (!pendingDeleteId) return;
+  const id = pendingDeleteId; closeConfirm();
+  setStatus('loading', 'Suppression en cours...');
+  try {
+    await spDeleteVideo(id);
+    unmarkViewed(id);
+    showNotify('Vidéo supprimée de SharePoint.', 'err');
+    await loadVideos();
+  } catch(e) {
+    console.error(e);
+    showNotify('Erreur lors de la suppression.', 'err');
+    setStatus('error', 'Erreur de suppression');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ADD VIDEO
+// ══════════════════════════════════════════════════════════════════════════════
+function openAddModal() { document.getElementById('addModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeAdd(e) {
+  if (e && e.target !== document.getElementById('addModal')) return;
+  document.getElementById('addModal').classList.remove('open'); document.body.style.overflow = '';
+}
+function selType(t) {
+  addType = t;
+  document.getElementById('tab-yt').classList.toggle('selected', t === 'youtube');
+  document.getElementById('tab-mp4').classList.toggle('selected', t === 'mp4');
+  document.getElementById('yt-section').style.display = t === 'youtube' ? 'block' : 'none';
+  document.getElementById('mp4-section').style.display = t === 'mp4' ? 'block' : 'none';
+}
+async function addVideo() {
+  const title = document.getElementById('addTitle').value.trim();
+  const cat = document.getElementById('addCat').value;
+  const desc = document.getElementById('addDesc').value.trim();
+  const dur = document.getElementById('addDur').value.trim();
+  if (!title) { showNotify('Veuillez renseigner le titre.'); return; }
+  let url = '';
+  if (addType === 'youtube') {
+    url = document.getElementById('ytUrl').value.trim();
+    if (!url || !getYTId(url)) { showNotify('URL YouTube invalide.'); return; }
+  } else {
+    url = document.getElementById('mp4Url').value.trim();
+    if (!url) { showNotify('Veuillez entrer l\'URL SharePoint de la vidéo.'); return; }
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Ajout en cours...';
+  setStatus('loading', 'Enregistrement dans SharePoint...');
+  try {
+    await spAddVideo(title, url, addType, cat, desc, dur);
+    ['ytUrl','mp4Url','addTitle','addDesc','addDur'].forEach(id => document.getElementById(id).value = '');
+    closeAdd({});
+    showNotify('Vidéo ajoutée et partagée avec tous les collaborateurs !', 'ok');
+    await loadVideos();
+  } catch(e) {
+    console.error(e);
+    showNotify('Erreur lors de l\'ajout. Vérifiez vos permissions.', 'err');
+    setStatus('error', 'Erreur d\'enregistrement');
+  }
+  btn.disabled = false; btn.textContent = 'Ajouter à la bibliothèque';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NOTIFY + MISC
+// ══════════════════════════════════════════════════════════════════════════════
+let _nt;
+function showNotify(msg, type = '') {
+  const n = document.getElementById('notify');
+  n.textContent = msg; n.className = 'notify' + (type ? ' ' + type : '');
+  n.classList.add('show'); clearTimeout(_nt);
+  _nt = setTimeout(() => n.classList.remove('show'), 3200);
+}
+window.addEventListener('scroll', () => document.getElementById('backTop').classList.toggle('visible', scrollY > 350));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePlayer({}); closeAdd({}); closeConfirm(); } });
+
+// ── THEME ─────────────────────────────────────────────────────────────────────
+function applyTheme(m) {
+  const light = m === 'light';
+  document.documentElement.classList.toggle('light', light);
+  const b = document.getElementById('themeToggle');
+  b.textContent = light ? '🌙' : '☀️'; b.title = light ? 'Mode sombre' : 'Mode clair';
+}
+function toggleTheme() {
+  const next = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+  localStorage.setItem('jpf-theme', next); applyTheme(next);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+applyTheme(localStorage.getItem('jpf-theme') || 'dark');
+loadUser();
+loadVideos();
+</script>
+</body>
+</html>
